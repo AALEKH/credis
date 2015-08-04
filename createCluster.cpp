@@ -4,21 +4,14 @@
 #include <stdlib.h>
 #include <string>
 #include <unistd.h>
+#include "createcluster.h"
 
 using namespace std;
-
-struct  clusterSpec {
-    int port; // First Port Number Redis Cluster Master
-    int timeout; //Idle Cluster Creation Timeout
-    int nodes; // Number of Nodes in a Cluster
-    int replicas; // No. of Slaves for each Master
-    const char *address; // Addess in Socket Adress to place cluster from
-};
 
 char *clusterString(clusterSpec c1, int port){
   string test;
   char *command = new char[4096];
-  test = "../../src/redis-server --port ";
+  test = "cd redis/utils/create-cluster && ../../src/redis-server --port ";
   strcat(command, test.c_str());
   strcat(command, to_string(port).c_str());
   test = " --cluster-enabled yes --cluster-config-file nodes-";
@@ -60,7 +53,9 @@ int createCluster(clusterSpec c1) {
   const char *address = c1.address;
   char *command = new char[4096];
   string blank = " ";
+  string yesString = "cd redis/utils/create-cluster && echo yes | ";
   string colon = ":";
+  strcat(command, yesString.c_str());
   string test = "../../src/redis-trib.rb create --replicas ";
   // strcat(host, address);
   // strcat(host, ":");
@@ -89,7 +84,7 @@ int stopCluster(clusterSpec c1) {
   char *run = new char[4098];
   while (port < EndPort) {
     port = port + 1;
-    strcat(run, "../../src/redis-cli -p ");
+    strcat(run, "cd redis/utils/create-cluster && ../../src/redis-cli -p ");
     strcat(run, to_string(port).c_str());
     strcat(run, " shutdown nosave");
     system(run);
@@ -101,7 +96,7 @@ int stopCluster(clusterSpec c1) {
 int watchCluster(int port) {
   port = port + 1;
   char *command;
-  string command_t = "../../src/redis-cli -p ";
+  string command_t = "cd redis/utils/create-cluster && ../../src/redis-cli -p ";
   strcat(command, command_t.c_str());
   strcat(command, to_string(port).c_str());
   command_t = " cluster nodes | head -30";
@@ -116,18 +111,19 @@ int watchCluster(int port) {
 }
 
 int cleanCluster() {
-  system("rm -rf *.log");
-  system("rm -rf appendonly*.aof");
-  system("rm -rf dump*.rdb");
-  system("rm -rf nodes*.conf");
+  system("cd redis/utils/create-cluster && rm -rf *.log");
+  system("cd redis/utils/create-cluster && rm -rf appendonly*.aof");
+  system("cd redis/utils/create-cluster && rm -rf dump*.rdb");
+  system("cd redis/utils/create-cluster && rm -rf nodes*.conf");
   return 0;
 }
 
-/*Example Run \/ \/
+/*
+Example Run \/ \/
 
  int main(){
    clusterSpec s1 = {
-     30032,
+     30000,
      2000,
      6,
      1,
@@ -140,5 +136,4 @@ int cleanCluster() {
    cleanCluster();
    return 0;
  }
-
 */
