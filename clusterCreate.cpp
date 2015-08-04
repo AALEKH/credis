@@ -3,6 +3,7 @@
 #include <sstream>
 #include <stdlib.h>
 #include <string>
+#include <unistd.h>
 
 using namespace std;
 
@@ -11,7 +12,7 @@ struct  clusterSpec {
     int timeout; //Idle Cluster Creation Timeout
     int nodes; // Number of Nodes in a Cluster
     int replicas; // No. of Slaves for each Master
-    int address;
+    int address; // Addess in Socket Adress to place cluster from
 };
 
 char *clusterString(clusterSpec c1, int port){
@@ -89,5 +90,31 @@ int stopCluster(clusterSpec c1) {
     strcat(run, " shutdown nosave");
     system(run);
   }
+  return 0;
+}
+
+int watchCluster(int port) {
+  port = port + 1;
+  char *command;
+  string command_t = "../../src/redis-cli -p ";
+  strcat(command, command_t.c_str());
+  strcat(command, to_string(port).c_str());
+  command_t = " cluster nodes | head -30";
+  strcat(command, command_t.c_str());
+  while (1) {
+    /* code */
+    system(command);
+    usleep(2000);
+  }
+
+  return 0;
+}
+
+int cleanCluster() {
+  system("rm -rf *.log");
+  system("rm -rf appendonly*.aof");
+  system("rm -rf dump*.rdb");
+  system("rm -rf nodes*.conf");
+
   return 0;
 }
