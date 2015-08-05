@@ -15,7 +15,7 @@ struct  clusterSpec {
 
 To compile example.cpp use:
 ```shell
-1) g++ main.cpp createCluster.cpp -o run
+1) g++ example.cpp createCluster.cpp -o run
 2) ./run
 ```
 
