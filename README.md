@@ -30,3 +30,4 @@ Header File to Include is:
 3) stopCluster(s1); </br>
 4) cleanCluster();
 
+Currently this cluster creation code, is tested with cpp-hiredis-cluster [https://github.com/shinberg/cpp-hiredis-cluster] , more test and implementations are welcome.
