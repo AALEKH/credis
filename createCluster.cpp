@@ -5,7 +5,7 @@
 #include <string>
 #include <unistd.h>
 #include "createcluster.h"
-
+#include <vector>
 
 using namespace std;
 
