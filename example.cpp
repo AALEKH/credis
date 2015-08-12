@@ -17,14 +17,12 @@ void processClusterCommand(const char *address, int port)
     Cluster<redisContext>::ptr_t cluster_p;
     redisReply * reply;
     int value = 0;
-    // char *command = new char[4096];
     string command;
     cluster_p = HiredisCommand<>::createCluster( address, port );
     cout << "Bus error 0" << endl;
     while (value < 20) {
       command = "FOO";
       cout << "Bus Error 1" << endl;
-      // strcat(command, to_string(value).c_str());
       command = command + to_string(value);
       cout << "Bus Error 2" << endl;
       reply = static_cast<redisReply*>( HiredisCommand<>::Command( cluster_p, "FOO", "SET %s %i", command.c_str(), value));
@@ -36,7 +34,6 @@ void processClusterCommand(const char *address, int port)
       }
       value = value + 1;
       freeReplyObject( reply );
-      // free(command);
     }
     delete cluster_p;
 }
@@ -64,7 +61,5 @@ int main(){
   {
       cout << "Cluster exception: " << e.what() << endl;
   }
-  // stopCluster(s1);
-  // cleanCluster();
   return 0;
 }

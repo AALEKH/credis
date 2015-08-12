@@ -35,6 +35,69 @@ char *clusterString(clusterSpec c1, int port){
   return command;
 }
 
+// Returns command for Master Id Extraction
+
+char *clusterMasterNodeConnectId(clusterSpec c1 ){
+  string test;
+  int port = c1.port + 1;
+  char *command = new char[4096];
+  test = "redis-cli -p ";
+  strcat(command, test.c_str());
+  strcat(command, to_string(port).c_str());
+  test = " cluster nodes | grep master | awk '{print $1}'";
+  strcat(command, test.c_str());
+  return command;
+}
+
+// Returns command for Master Address Extraction
+char *clusterMasterNodeConnectAddress(clusterSpec c1 ){
+  string test;
+  int port = c1.port + 1;
+  char *command = new char[4096];
+  test = "redis-cli -p ";
+  strcat(command, test.c_str());
+  strcat(command, to_string(port).c_str());
+  test = " cluster nodes | grep master | awk '{print $2}'";
+  strcat(command, test.c_str());
+  return command;
+}
+
+int arrayOfId(char *command) {
+    
+    vector<char *> arrId;
+    FILE* pipe;
+    char buffer[2048];
+    pipe = popen(command, "r");
+    while(!feof(pipe)) {
+        if(fgets(buffer, 2048, pipe) != NULL)
+            arrId.push_back(buffer);
+    }
+    pclose(pipe);
+
+    for(int i=0; i< arrId.size(); i++){
+        cout << "the elements of array are" << arrId[i] << endl;
+    }
+    return 0;
+}
+
+int arrayOfAddress(char *command){
+
+    vector<char *> arrAddress;
+    FILE* pipe;
+    char buffer[2048];
+    pipe = popen(command, "r");
+    while(!feof(pipe)) {
+        if(fgets(buffer, 2048, pipe) != NULL)
+            arrAddress.push_back(buffer);
+    }
+    pclose(pipe);
+
+    for(int j=0; j < arrAddress.size(); j++){
+        cout << "the elements of array are" << arrAddress[j] << endl;
+    }
+    return 0;
+}
+
 int startCluster(clusterSpec c1) {
     int EndPort = c1.port + c1.nodes;
     stringstream ss;
@@ -138,3 +201,22 @@ Example Run \/ \/
    return 0;
  }
 */
+
+// Array of Id and Array of Address Extracted
+//  int main(){
+//     vector<char *> arrIdGlobal;
+//     vector<char *> arrAddressGlobal;
+//     FILE* pipe;
+//     char buffer[2048];
+//     clusterSpec s1 = {
+//      30000,
+//      2000,
+//      6,
+//      1,
+//      "127.0.0.1"
+//     };
+//     arrayOfId(clusterMasterNodeConnectId(s1));
+//     arrayOfId(clusterMasterNodeConnectAddress(s1));
+//     return 0;
+// }
+
