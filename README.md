@@ -17,6 +17,7 @@ To compile example.cpp use:
 ```shell
 1) g++ example.cpp createCluster.cpp -o run
 2) ./run
+Additional Note:=>  add -std=c++11 and dont forget to use -lhiredis and -levent flags, with g++
 ```
 
 Header File to Include is:
